@@ -38,6 +38,7 @@ function Peer (opts) {
   self.initiator = opts.initiator || false
   self.channelConfig = opts.channelConfig || Peer.channelConfig
   self.config = opts.config || Peer.config
+  sef.createDataChannel = opts.createDataChannel || true
   self.constraints = self._transformConstraints(opts.constraints || Peer.constraints)
   self.offerConstraints = self._transformConstraints(opts.offerConstraints || {})
   self.answerConstraints = self._transformConstraints(opts.answerConstraints || {})
@@ -112,9 +113,11 @@ function Peer (opts) {
       createdOffer = true
     }
 
-    self._setupData({
-      channel: self._pc.createDataChannel(self.channelName, self.channelConfig)
-    })
+    if (self.createDataChannel) {
+      self._setupData({
+        channel: self._pc.createDataChannel(self.channelName, self.channelConfig)
+      })
+    }
   } else {
     self._pc.ondatachannel = function (event) {
       self._setupData(event)
